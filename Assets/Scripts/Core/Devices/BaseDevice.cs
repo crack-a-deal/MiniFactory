@@ -11,6 +11,13 @@ public abstract class BaseDevice : MonoBehaviour, IDevice
 
     public abstract IReadOnlyCollection<TagBase> Tags { get; }
 
+    protected StateMachine _stateMachine;
+
+    protected virtual void Awake()
+    {
+        _stateMachine = new StateMachine();
+    }
+
     public abstract void Tick(float deltaTime);
 
     public TagBase GetTagById(string id)
@@ -19,40 +26,46 @@ public abstract class BaseDevice : MonoBehaviour, IDevice
     }
 }
 
-public abstract class BaseFSMDevice<T> : BaseDevice where T : Enum
+public abstract class BaseDevice<TState> : BaseDevice where TState : Enum
 {
-    [SerializeField] private T state;
+    [SerializeField] private BaseStateBehaviorPair<TState>[] behaviors;
+    [SerializeField] private TState initialState;
 
-    private Dictionary<PumpState, IPumpState> _states;
+    protected Dictionary<TState, IState> _states;
+    protected Dictionary<TState, BaseBehavior[]> _stateBehaviors;
 
-    private IPumpState _currentState;
+    protected override void Awake()
+    {
+        base.Awake();
 
-    //public T State
-    //{
-    //    get
-    //    {
-    //        return state;
-    //    }
-    //    set
-    //    {
-    //        if (state != value)
-    //        {
-    //            state = value;
-    //            ChangeState(state);
-    //        }
-    //    }
-    //}
+        BuildBehaviors();
+        BuildStates();
 
-    //private void ChangeState(T newState)
-    //{
-    //    if (_currentState?.State == newState)
-    //    {
-    //        return;
-    //    }
+        if (_states.TryGetValue(initialState, out IState state))
+        {
+            _stateMachine.ChangeState(state);
+        }
+    }
 
-    //    _currentState?.Exit(this);
+    private void BuildBehaviors()
+    {
+        _stateBehaviors = new Dictionary<TState, BaseBehavior[]>(behaviors.Length);
 
-    //    _currentState = _states[newState];
-    //    _currentState.Enter(this);
-    //}
+        foreach (BaseStateBehaviorPair<TState> pair in behaviors)
+        {
+            _stateBehaviors[pair.State] = pair.Behaviors;
+        }
+    }
+
+    private void BuildStates()
+    {
+        _states = new Dictionary<TState, IState>(Enum.GetNames(typeof(TState)).Length);
+
+        foreach (BaseStateBehaviorPair<TState> pair in behaviors)
+        {
+            _states[pair.State] = CreateState(pair.State);
+        }
+    }
+
+    protected abstract IState CreateState(TState state);
 }

@@ -1,5 +1,5 @@
 public enum PumpState
 {
-    Off,
+    Idle,
     Running,
 }

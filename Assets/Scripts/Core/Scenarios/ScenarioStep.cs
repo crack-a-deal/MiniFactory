@@ -1,14 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-
-public enum StepState
-{
-    Idle,
-    Active,
-    Completed,
-    Failed,
-}
 
 
 public class ScenarioStep
@@ -29,7 +20,6 @@ public class ScenarioStep
     public void Activate()
     {
         _state = StepState.Active;
-        Debug.Log($"Start Step [{_step.Id}]: with [{_conditions.Count}] conditions ");
 
         foreach (var item in _conditions)
         {
@@ -44,7 +34,7 @@ public class ScenarioStep
 
     public void Tick(float dt)
     {
-        if(_state != StepState.Active)
+        if (_state != StepState.Active)
         {
             return;
         }
@@ -57,7 +47,6 @@ public class ScenarioStep
         if (CheckConditionComplete())
         {
             _state = StepState.Completed;
-            Debug.Log($"{_step.Id} Completed");
             Deactivate();
         }
     }

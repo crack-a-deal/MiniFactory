@@ -634,9 +634,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Pump
+  behaviors:
+  - State: 0
+    Behaviors:
+    - rid: 6967474900999077890
+  - State: 1
+    Behaviors:
+    - rid: 6967474900999077889
+  initialState: 0
   maxFlowRate: 4
   button: {fileID: 315288658}
-  state: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 6967474900999077889
+      type: {class: PumpFlowBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        flowRateChangePerSecond: 1
+    - rid: 6967474900999077890
+      type: {class: PumpFlowBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        flowRateChangePerSecond: -1
 --- !u!212 &715468225
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -698,7 +716,7 @@ Transform:
   m_GameObject: {fileID: 715468223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.95, y: -0.527, z: 0}
+  m_LocalPosition: {x: -3.1, y: -0.46, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -736,9 +754,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Reservoir
+  behaviors:
+  - State: 0
+    Behaviors: []
+  - State: 1
+    Behaviors:
+    - rid: 6967474900999077894
+  - State: 2
+    Behaviors: []
+  - State: 3
+    Behaviors:
+    - rid: 6967474900999077895
+  initialState: 0
   capacity: 20
   spriteRenderer: {fileID: 1148711985}
   maxFill: 3.5
+  references:
+    version: 2
+    RefIds:
+    - rid: 6967474900999077894
+      type: {class: ReservoirFillBehavior, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 6967474900999077895
+      type: {class: ReservoirDrainBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        drainRate: 5
 --- !u!212 &904462584
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -800,7 +840,7 @@ Transform:
   m_GameObject: {fileID: 904462582}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.72, y: 0.55, z: 0}
+  m_LocalPosition: {x: 2.5700002, y: 0.617, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1094,7 +1134,6 @@ MonoBehaviour:
   pump: {fileID: 715468224}
   valve: {fileID: 2144272004}
   reservoir: {fileID: 904462583}
-  filter: {fileID: 0}
 --- !u!4 &1338372593
 Transform:
   m_ObjectHideFlags: 0
@@ -1284,7 +1323,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Valve
+  behaviors:
+  - State: 0
+    Behaviors: []
+  - State: 1
+    Behaviors:
+    - rid: 6967474900999077891
+  - State: 2
+    Behaviors: []
+  - State: 3
+    Behaviors:
+    - rid: 6967474900999077892
+  initialState: 0
   button: {fileID: 2140357657}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6967474900999077891
+      type: {class: ValveFlowBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        openingSpeed: 0.3
+    - rid: 6967474900999077892
+      type: {class: ValveFlowBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        openingSpeed: -0.3
 --- !u!212 &2144272005
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1346,7 +1408,7 @@ Transform:
   m_GameObject: {fileID: 2144272003}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.184, y: -0.093, z: 0}
+  m_LocalPosition: {x: -0.33399987, y: -0.026, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

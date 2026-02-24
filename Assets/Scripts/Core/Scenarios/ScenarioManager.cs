@@ -13,7 +13,7 @@ public class ScenarioManager : MonoBehaviour
     private ScenarioBuilder _builder;
 
     private ScenarioStep _currentStep;
-    private int _currentStepIndex=0;
+    private int _currentStepIndex = 0;
     private void Awake()
     {
         _deviceRegistry = new DeviceRegistry(devices);
