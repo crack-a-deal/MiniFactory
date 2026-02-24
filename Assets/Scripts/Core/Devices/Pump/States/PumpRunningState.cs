@@ -1,19 +1,13 @@
-public class PumpRunningState : IPumpState
+using System.Collections.Generic;
+
+public class PumpRunningState : BaseState<PumpDevice>, IUpdatable
 {
-    public PumpState State => PumpState.Running;
-
-    public void Enter(PumpDevice pump)
+    public PumpRunningState(IEnumerable<IBehavior> behaviors, PumpDevice device) : base(behaviors, device)
     {
-        //throw new System.NotImplementedException();
     }
 
-    public void Exit(PumpDevice pump)
+    public void Update(float deltaTime)
     {
-        //throw new System.NotImplementedException();
-    }
-
-    public void Update(PumpDevice pump, float dt)
-    {
-        pump.FlowRate.Value = pump.MaxFlowRate;
+        _device.FlowRate.Value = _device.MaxFlowRate;
     }
 }

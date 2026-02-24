@@ -1,39 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PumpDevice : BaseDevice
+public class PumpDevice : BaseDevice<PumpState>
 {
     [SerializeField] private float maxFlowRate;
-
     [SerializeField] private DeviceButton button;
-
-    [SerializeField] private PumpState state;
-
-
-    public PumpState State
-    {
-        get
-        {
-            return state;
-        }
-        set
-        {
-            if (state != value)
-            {
-                state = value;
-                ChangeState(state);
-            }
-        }
-    }
 
     public float MaxFlowRate => maxFlowRate;
 
     public Tag<bool> IsOn;
     public Tag<float> FlowRate;
-
-    private Dictionary<PumpState, IPumpState> _states;
-
-    private IPumpState _currentState;
 
     public override IReadOnlyCollection<TagBase> Tags => new TagBase[] { IsOn, FlowRate };
 
@@ -41,17 +18,6 @@ public class PumpDevice : BaseDevice
     {
         IsOn = new Tag<bool>($"IsOn", false);
         FlowRate = new Tag<float>($"FlowRate", 0f);
-    }
-
-    private void Awake()
-    {
-        _states = new Dictionary<PumpState, IPumpState>
-        {
-            { PumpState.Off, new PumpOffState() },
-            { PumpState.Running, new PumpRunningState() },
-        };
-
-        ChangeState(state);
     }
 
     private void Start()
@@ -66,21 +32,30 @@ public class PumpDevice : BaseDevice
 
     public override void Tick(float deltaTime)
     {
-        _currentState.Update(this, deltaTime);
-
-        //FlowRate.Value = IsOn.Value ? maxFlowRate : 0f;
+        _stateMachine.Update(deltaTime);
     }
 
-    private void ChangeState(PumpState newState)
+    public void ChangeState(PumpState newState)
     {
-        if (_currentState?.State == newState)
+        if (_states.ContainsKey(newState))
         {
-            return;
+            _stateMachine.ChangeState(_states[newState]);
         }
+    }
 
-        _currentState?.Exit(this);
+    protected override IState CreateState(PumpState state)
+    {
+        return state switch
+        {
+            PumpState.Idle => new PumpIdleState(_stateBehaviors[PumpState.Idle], this),
+            PumpState.Running =>
+            new PumpRunningState(_stateBehaviors[PumpState.Running], this),
+            _ => throw new NotImplementedException()
+        };
+    }
 
-        _currentState = _states[newState];
-        _currentState.Enter(this);
+    public void SetFlow(float flowRate)
+    {
+        FlowRate.Value = Mathf.Clamp(flowRate, 0f, MaxFlowRate);
     }
 }
