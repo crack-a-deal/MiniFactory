@@ -18,7 +18,7 @@ public class DeviceRegistry
 
     public IDevice GetDeviceById(string id)
     {
-        if(_devicesByName.TryGetValue(id, out IDevice device))
+        if (_devicesByName.TryGetValue(id, out IDevice device))
         {
             return device;
         }

@@ -36,6 +36,6 @@ public abstract class BaseBehavior<TDevice> : BaseBehavior where TDevice : IDevi
 
         OnTick(deltaTime);
     }
-    
+
     protected abstract void OnTick(float deltaTime);
 }

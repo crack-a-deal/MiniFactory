@@ -27,7 +27,7 @@ public abstract class BaseCondition : ICondition
 
     public void Activate()
     {
-        State= ConditionState.Pending;
+        State = ConditionState.Pending;
     }
 
     public void Deactivate()
@@ -37,7 +37,7 @@ public abstract class BaseCondition : ICondition
 
     public void Tick(float deltaTime)
     {
-        if(_state!= ConditionState.Pending)
+        if (_state != ConditionState.Pending)
         {
             return;
         }
