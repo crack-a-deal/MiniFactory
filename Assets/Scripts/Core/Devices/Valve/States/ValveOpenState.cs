@@ -1,19 +1,8 @@
-public class ValveOpenState : IValveState
+using System.Collections.Generic;
+
+public class ValveOpenState : BaseState<ValveDevice>
 {
-    public ValveState State => ValveState.Open;
-
-    public void Enter(ValveDevice device)
+    public ValveOpenState(IEnumerable<IBehavior> behaviors, ValveDevice device) : base(behaviors, device)
     {
-        //throw new System.NotImplementedException();
-    }
-
-    public void Exit(ValveDevice device)
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public void Update(ValveDevice device, float dt)
-    {
-        //throw new System.NotImplementedException();
     }
 }
